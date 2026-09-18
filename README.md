@@ -26,7 +26,7 @@
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/voicecraft.git
+git clone https://github.com/YukiNoir-afk/voicecraft.git
 cd voicecraft
 
 # Backend
