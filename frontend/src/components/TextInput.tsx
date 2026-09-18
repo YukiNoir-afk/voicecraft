@@ -8,7 +8,7 @@ interface TextInputProps {
   maxLength?: number;
 }
 
-const MAX_CHARS = 5000;
+const MAX_CHARS = 10000;
 
 export default function TextInput({ value, onChange, maxLength = MAX_CHARS }: TextInputProps) {
   const [isFocused, setIsFocused] = useState(false);

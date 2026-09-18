@@ -31,7 +31,7 @@ app.add_middleware(
 # ──────────────────────────────────────────────
 
 class TTSRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=5000, description="Text to convert to speech")
+    text: str = Field(..., min_length=1, max_length=10000, description="Text to convert to speech")
     voice: str = Field(default="en-US-EmmaNeural", description="Voice short name")
     rate: int = Field(default=0, ge=-50, le=100, description="Speech rate: -50 to +100 percent")
     pitch: int = Field(default=0, ge=-50, le=50, description="Pitch: -50 to +50 Hz")
