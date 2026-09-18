@@ -131,19 +131,48 @@ body::before {
 /* ── Animations ───────────────────────────────── */
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(8px); }
+  to { transform: translateY(0); }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(20px); }
+  to { transform: translateY(0); }
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: translateX(0); }
+  from { transform: translateX(20px); }
+  to { transform: translateX(0); }
 }
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fade-in-d1 {
+  animation: fadeIn 0.5s ease-out 0.1s both;
+}
+
+.animate-fade-in-d2 {
+  animation: fadeIn 0.5s ease-out 0.15s both;
+}
+
+.animate-fade-in-d3 {
+  animation: fadeIn 0.5s ease-out 0.2s both;
+}
+
+.animate-fade-in-d4 {
+  animation: fadeIn 0.5s ease-out 0.25s both;
+}
+
+.animate-fade-in-d5 {
+  animation: fadeIn 0.5s ease-out 0.3s both;
+}
+
 
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 0 20px var(--accent-purple-glow); }
@@ -168,41 +197,6 @@ body::before {
 @keyframes orb-breathe {
   0%, 100% { transform: scale(1); opacity: 0.6; }
   50% { transform: scale(1.15); opacity: 1; }
-}
-
-.animate-fade-in {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-.animate-fade-in-up {
-  opacity: 0;
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-.animate-fade-in-d1 {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out 0.1s forwards;
-}
-
-.animate-fade-in-d2 {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out 0.2s forwards;
-}
-
-.animate-fade-in-d3 {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out 0.3s forwards;
-}
-
-.animate-fade-in-d4 {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out 0.4s forwards;
-}
-
-.animate-fade-in-d5 {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out 0.5s forwards;
 }
 
 .animate-pulse-glow {
