@@ -6,7 +6,7 @@ import VoiceSelector from "@/components/VoiceSelector";
 import VoiceSettings from "@/components/VoiceSettings";
 import AudioPlayer from "@/components/AudioPlayer";
 import GenerateButton from "@/components/GenerateButton";
-import { TTSSettings, generateSpeech, downloadAudio } from "@/lib/api";
+import { TTSSettings, generateSpeech } from "@/lib/api";
 
 export default function Home() {
   const [text, setText] = useState("");
@@ -48,12 +48,22 @@ export default function Home() {
   }, [text, selectedVoice, settings, canGenerate, isLoading, audioUrl]);
 
   const handleDownload = useCallback(async () => {
+    if (!audioUrl) return;
     try {
-      await downloadAudio(text, selectedVoice, settings);
-    } catch (err) {
+      const response = await fetch(audioUrl);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "voicecraft_audio.mp3";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch {
       setError("Download failed. Please try again.");
     }
-  }, [text, selectedVoice, settings]);
+  }, [audioUrl]);
 
   return (
     <div
@@ -234,6 +244,7 @@ export default function Home() {
 
         {/* Voice & Settings Grid */}
         <div
+          className="controls-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",

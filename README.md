@@ -21,7 +21,7 @@
 
 ### Prerequisites
 - Python 3.10+
-- Node.js 18+
+- Node.js 20.9+
 
 ### 1. Clone & Install
 

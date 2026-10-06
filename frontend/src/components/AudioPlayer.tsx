@@ -140,8 +140,13 @@ export default function AudioPlayer({
       }
     };
     const onLoadedMetadata = () => {
-      setDuration(audio.duration);
+      setDuration(isFinite(audio.duration) ? audio.duration : 0);
       setCurrentTime(0);
+    };
+    const onDurationChange = () => {
+      if (isFinite(audio.duration)) {
+        setDuration(audio.duration);
+      }
     };
     const onEnded = () => {
       setIsPlaying(false);
@@ -150,22 +155,42 @@ export default function AudioPlayer({
 
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("durationchange", onDurationChange);
     audio.addEventListener("ended", onEnded);
 
     return () => {
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+      audio.removeEventListener("durationchange", onDurationChange);
       audio.removeEventListener("ended", onEnded);
     };
-  }, [isDragging, stopVisualization]);
+  }, [audioUrl, isDragging, stopVisualization]);
 
-  // Reset state when audio URL changes
+  // Tear down old AudioContext and reset playback state when audio URL changes.
+  // The cleanup function runs when audioUrl changes, resetting state for the new clip.
+  // Refs are accessed only in the effect body and cleanup (not during render).
   useEffect(() => {
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setDuration(0);
+    // On mount / new audioUrl: stop any lingering visualization
     stopVisualization();
-  }, [audioUrl, stopVisualization]);
+
+    return () => {
+      // Cleanup when audioUrl is about to change
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setDuration(0);
+
+      if (sourceRef.current) {
+        sourceRef.current.disconnect();
+        sourceRef.current = null;
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
+      analyserRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioUrl]);
 
   const togglePlay = async () => {
     const audio = audioRef.current;

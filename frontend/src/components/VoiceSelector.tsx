@@ -18,20 +18,26 @@ export default function VoiceSelector({ selectedVoice, onSelect }: VoiceSelector
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadVoices();
-  }, []);
-
-  const loadVoices = async () => {
+  const fetchVoicesData = async () => {
     try {
       setLoading(true);
+      setError(null);
       const res = await fetchVoices();
       setVoices(res.voices);
-    } catch (err) {
+    } catch {
       setError("Unable to load voices. Is the backend running?");
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchVoicesData();
+  }, []);
+
+  const handleRetry = () => {
+    fetchVoicesData();
   };
 
   // Get unique languages
@@ -292,7 +298,7 @@ export default function VoiceSelector({ selectedVoice, onSelect }: VoiceSelector
             >
               <div style={{ marginBottom: "8px" }}>⚠️ {error}</div>
               <button
-                onClick={loadVoices}
+                onClick={handleRetry}
                 style={{
                   padding: "6px 16px",
                   background: "rgba(239, 68, 68, 0.1)",

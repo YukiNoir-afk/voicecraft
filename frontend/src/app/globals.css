@@ -255,3 +255,19 @@ input[type="range"]::-moz-range-thumb {
   background: var(--accent-purple-soft);
   color: var(--text-primary);
 }
+
+/* ── Mobile Responsive ───────────────────────── */
+
+@media (max-width: 640px) {
+  .controls-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  header {
+    padding: 14px 16px !important;
+  }
+
+  main {
+    padding: 20px 14px 32px !important;
+  }
+}

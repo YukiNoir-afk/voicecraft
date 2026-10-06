@@ -4,7 +4,7 @@ REST API for Text-to-Speech using Edge TTS (Microsoft Neural Voices).
 """
 
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import StreamingResponse, Response
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional
@@ -67,24 +67,29 @@ async def get_voices(locale: Optional[str] = Query(None, description="Filter by 
 @app.post("/api/tts")
 async def text_to_speech(request: TTSRequest):
     """
-    Convert text to speech. Returns streaming MP3 audio.
+    Convert text to speech. Returns MP3 audio.
+    Audio is fully buffered so that TTS engine errors are caught and returned
+    as proper HTTP error responses instead of truncated streams.
     """
     try:
         rate_str = tts_engine.format_rate(request.rate)
         pitch_str = tts_engine.format_pitch(request.pitch)
         volume_str = tts_engine.format_volume(request.volume)
 
-        return StreamingResponse(
-            tts_engine.generate_audio_stream(
-                text=request.text,
-                voice=request.voice,
-                rate=rate_str,
-                pitch=pitch_str,
-                volume=volume_str,
-            ),
+        audio_bytes = await tts_engine.generate_audio_bytes(
+            text=request.text,
+            voice=request.voice,
+            rate=rate_str,
+            pitch=pitch_str,
+            volume=volume_str,
+        )
+
+        return Response(
+            content=audio_bytes,
             media_type="audio/mpeg",
             headers={
                 "Content-Disposition": "inline; filename=voicecraft_audio.mp3",
+                "Content-Length": str(len(audio_bytes)),
             },
         )
     except Exception as e:
